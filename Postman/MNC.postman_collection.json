@@ -1,0 +1,193 @@
+{
+	"info": {
+		"_postman_id": "a41b33a2-c309-4c14-8c3d-c7cf9dd7e831",
+		"name": "MNC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17198851"
+	},
+	"item": [
+		{
+			"name": "Nomor-5",
+			"item": [
+				{
+					"name": "Add-Language",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"language\": \"Go\",\n    \"appeared\": 2009,\n    \"created\": [\n        \"Robert Griesemer\",\n        \"Rob Pike\",\n        \"Ken Thompson\"\n    ],\n    \"functional\": true,\n    \"object-oriented\": false,\n    \"relation\": {\n        \"influenced-by\": [\n            \"C\",\n            \"Phyton\",\n            \"Pascal\",\n            \"SmallTalk\",\n            \"Modula\"\n        ],\n        \"influences\": [\n            \"Odin\",\n            \"Crystal\",\n            \"Zig\"\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/language",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"language"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get-Detail-Language",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/language/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"language",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update-Language",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"language\": \"Go Update\",\n    \"appeared\": 2009,\n    \"created\": [\n        \"Robert Griesemer\",\n        \"Rob Pike\",\n        \"Ken Thompson\"\n    ],\n    \"functional\": true,\n    \"object-oriented\": false,\n    \"relation\": {\n        \"influenced-by\": [\n            \"C\",\n            \"Phyton\",\n            \"Pascal\",\n            \"SmallTalk\",\n            \"Modula\"\n        ],\n        \"influences\": [\n            \"Odin\",\n            \"Crystal\",\n            \"Zig\"\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/language/0",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"language",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get-All-Languages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/languages",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"languages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete-Language",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/language/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"language",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/ - Nomor 3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get /palindrome - Nomor 4",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data\":\"text\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/palindrome",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"palindrome"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get /language - Nomor 3",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/languages/Nomor-3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"languages",
+						"Nomor-3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
