@@ -1,140 +1,95 @@
 package internal
 
 import (
-	"encoding/json"
-	"net/http"
 	"strconv"
 
 	"github.com/Risuii/helpers/exception"
 	"github.com/Risuii/helpers/response"
 	"github.com/Risuii/models"
-	"github.com/gorilla/mux"
+	"github.com/labstack/echo/v4"
 )
 
 type Handler struct {
 	UseCases UseCase
 }
 
-func NewHandler(router *mux.Router, usecase UseCase) {
+func NewHandler(e *echo.Echo, usecase UseCase) {
 	handler := &Handler{
 		UseCases: usecase,
 	}
 
-	router.HandleFunc("/", handler.Home).Methods(http.MethodGet)
-	router.HandleFunc("/palindrome", handler.Palindrome).Methods(http.MethodGet)
-	router.HandleFunc("/languages/Nomor-3", handler.Languages).Methods(http.MethodGet)
-	router.HandleFunc("/languages", handler.GetAllLanguages).Methods(http.MethodGet)
-	router.HandleFunc("/language", handler.AddLanguage).Methods(http.MethodPost)
-	router.HandleFunc("/language/{id}", handler.GetLanguage).Methods(http.MethodGet)
-	router.HandleFunc("/language/{id}", handler.UpdateLanguage).Methods(http.MethodPatch)
-	router.HandleFunc("/language/{id}", handler.DeleteLanguage).Methods(http.MethodDelete)
+	e.GET("/", handler.Home)
+	e.GET("/palindrome", handler.Palindrome)
+	e.GET("/languages/Nomor-3", handler.Languages)
+	e.GET("/languages", handler.GetAllLanguages)
+	e.POST("/language", handler.AddLanguage)
+	e.GET("/language/:id", handler.GetLanguage)
+	e.PATCH("/language/:id", handler.UpdateLanguage)
+	e.DELETE("/language/:id", handler.DeleteLanguage)
 }
 
-func (handler *Handler) Home(w http.ResponseWriter, r *http.Request) {
-	var res response.Response
+func (handler *Handler) Home(c echo.Context) error {
 	msg := "Hello Go Developers"
-	res = response.Success(response.StatusOK, msg)
-
-	res.JSON(w)
+	return response.Success(response.StatusOK, msg).JSON(c.Response())
 }
 
-func (handler *Handler) Palindrome(w http.ResponseWriter, r *http.Request) {
-	var res response.Response
+func (handler *Handler) Palindrome(c echo.Context) error {
 	var userInput models.Palindrome
 
-	if err := json.NewDecoder(r.Body).Decode(&userInput); err != nil {
-		res = response.Error(response.StatusUnprocessableEntity, exception.ErrUnprocessableEntity, nil)
-		res.JSON(w)
-		return
+	if err := c.Bind(&userInput); err != nil {
+		return response.Error(response.StatusUnprocessableEntity, exception.ErrUnprocessableEntity, nil).JSON(c.Response())
 	}
 
-	res = handler.UseCases.Palindrome(userInput.Data)
-
-	res.JSON(w)
+	return handler.UseCases.Palindrome(userInput.Data).JSON(c.Response())
 }
 
-func (handler *Handler) Languages(w http.ResponseWriter, r *http.Request) {
-	var res response.Response
-
-	res = handler.UseCases.Language()
-
-	res.JSON(w)
+func (handler *Handler) Languages(c echo.Context) error {
+	return handler.UseCases.Language().JSON(c.Response())
 }
 
-func (handler *Handler) AddLanguage(w http.ResponseWriter, r *http.Request) {
-	var res response.Response
+func (handler *Handler) AddLanguage(c echo.Context) error {
 	var language models.ProgrammingLanguage
 
-	if err := json.NewDecoder(r.Body).Decode(&language); err != nil {
-		res = response.Error(response.StatusUnprocessableEntity, exception.ErrUnprocessableEntity, nil)
-		res.JSON(w)
-		return
+	if err := c.Bind(&language); err != nil {
+		return response.Error(response.StatusUnprocessableEntity, exception.ErrUnprocessableEntity, nil).JSON(c.Response())
 	}
 
-	res = handler.UseCases.AddLanguage(language)
-
-	res.JSON(w)
+	return handler.UseCases.AddLanguage(language).JSON(c.Response())
 }
 
-func (handler *Handler) GetLanguage(w http.ResponseWriter, r *http.Request) {
-	var res response.Response
-
-	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+func (handler *Handler) GetLanguage(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		res = response.Error(response.StatusInternalServerError, exception.ErrInternalServer, nil)
-		res.JSON(w)
-		return
+		return response.Error(response.StatusInternalServerError, exception.ErrInternalServer, nil).JSON(c.Response())
 	}
 
-	res = handler.UseCases.GetLanguage(id)
-
-	res.JSON(w)
+	return handler.UseCases.GetLanguage(id).JSON(c.Response())
 }
 
-func (handler *Handler) GetAllLanguages(w http.ResponseWriter, r *http.Request) {
-	var res response.Response
-
-	res = handler.UseCases.GetAllLanguages()
-
-	res.JSON(w)
+func (handler *Handler) GetAllLanguages(c echo.Context) error {
+	return handler.UseCases.GetAllLanguages().JSON(c.Response())
 }
 
-func (handler *Handler) UpdateLanguage(w http.ResponseWriter, r *http.Request) {
-	var res response.Response
+func (handler *Handler) UpdateLanguage(c echo.Context) error {
 	var userInput models.ProgrammingLanguage
 
-	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		res = response.Error(response.StatusInternalServerError, exception.ErrInternalServer, nil)
-		res.JSON(w)
-		return
+		return response.Error(response.StatusInternalServerError, exception.ErrInternalServer, nil).JSON(c.Response())
 	}
 
-	if err := json.NewDecoder(r.Body).Decode(&userInput); err != nil {
-		res = response.Error(response.StatusUnprocessableEntity, exception.ErrUnprocessableEntity, nil)
-		res.JSON(w)
-		return
+	if err := c.Bind(&userInput); err != nil {
+		return response.Error(response.StatusUnprocessableEntity, exception.ErrUnprocessableEntity, nil).JSON(c.Response())
 	}
 
-	res = handler.UseCases.UpdateLanguage(id, userInput)
-
-	res.JSON(w)
+	return handler.UseCases.UpdateLanguage(id, userInput).JSON(c.Response())
 }
 
-func (handler *Handler) DeleteLanguage(w http.ResponseWriter, r *http.Request) {
-	var res response.Response
-
-	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+func (handler *Handler) DeleteLanguage(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		res = response.Error(response.StatusInternalServerError, exception.ErrInternalServer, nil)
-		res.JSON(w)
-		return
+		return response.Error(response.StatusInternalServerError, exception.ErrInternalServer, nil).JSON(c.Response())
 	}
 
-	res = handler.UseCases.DeleteLanguage(id)
-
-	res.JSON(w)
+	return handler.UseCases.DeleteLanguage(id).JSON(c.Response())
 }
